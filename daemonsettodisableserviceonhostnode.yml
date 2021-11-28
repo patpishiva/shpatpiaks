@@ -33,7 +33,7 @@ spec:
           - -c
           - |
             echo "disabling the service"
-            systemctl enable chrony.service
+            systemctl disable chrony.service
             echo "service disabled successfully"
             sleep 100000s
       restartPolicy: Always
