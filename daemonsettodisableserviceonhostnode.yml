@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  labels:
+    app: disableserviceonhostnode
+  name: disableserviceonhostnode
+spec:
+  selector:
+    matchLabels:
+      app: disableserviceonhostnode
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: disableserviceonhostnode
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        securityContext:
+            privileged: true        
+        command:
+          - nsenter
+          - --target
+          - "1"
+          - --mount
+          - --uts
+          - --ipc
+          - --net
+          - --pid
+          - --
+          - bash
+          - -c
+          - |
+            echo "disabling the service"
+            systemctl enable chrony.service
+            echo "service disabled successfully"
+            sleep 100000s
+      restartPolicy: Always
+      hostPID: true
